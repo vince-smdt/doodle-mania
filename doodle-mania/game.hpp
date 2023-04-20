@@ -1,19 +1,13 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
-#include <cassert>
 #include <fstream>
-#include <iostream>
 #include <list>
-#include <queue>
 
 #include "bullet.hpp"
-#include "bulletSpawn.hpp"
+#include "Level.hpp"
 #include "player.hpp"
-#include "utils.h"
 
 #define TRACKS_DIST_APART 70
-#define TOTAL_TRACKS 7
 
 using namespace sf;
 
@@ -21,21 +15,16 @@ class Game {
 private:
     RenderWindow* _window;
 
-    int _speed;
+    Level _level;
 
     Player _player;
-    int _playerTrackPos = TOTAL_TRACKS / 2;
+    int _playerTrackPos;
 
     std::list<Bullet> _bullets;
-    std::queue<BulletSpawn> _bulletSpawns;
     Clock _bulletSpawnClock;
 
     std::vector<RectangleShape> _tracks;
-
-    Music _music;
-
     RectangleShape _playerLine;
-
     RectangleShape _background;
 
 public:
@@ -52,17 +41,10 @@ public:
     bool checkBulletCollision()const;            // Check if player is colliding with any bullets
     void deleteOffscreenBullets();                // Delete all bullets that are offscreen
 
-    // Level generation from file
-    void generateLevelFromFile(const char* filePath);
-
-    // Sound methods
-    void loadMusic(const char* filePath, float volume);
-
     // Draw methods
     void drawAll();
     void drawTracks();
     void drawBullets();
-
 };
 
 Game::Game(RenderWindow& window) 
@@ -73,12 +55,11 @@ Game::Game(RenderWindow& window)
 
 void Game::init()
 {
-    // Initialise game attributs
-    _speed = 10;    // Speeds under 10 will make many bullets spawn at same y pos at the beginning of song
+    _playerTrackPos = _level.GetNumberOfTracks() / 2;
 
     // Initialise tracks
-    _tracks.resize(TOTAL_TRACKS);
-    for (__int64 i = 0; i < TOTAL_TRACKS; i++)
+    _tracks.resize(_level.GetNumberOfTracks());
+    for (__int64 i = 0; i < _level.GetNumberOfTracks(); i++)
     {
         _tracks[i].setSize(Vector2f(4, _window->getSize().y));
         _tracks[i].setOrigin(Vector2f(2, _tracks[i].getSize().y));
@@ -98,17 +79,16 @@ void Game::init()
     _playerLine.setPosition(Vector2f(_window->getSize().x / 2, _window->getSize().y / 1.2));
 
     // Initialise player position
-    _player.InstantlyMoveTo(_tracks[floor(TOTAL_TRACKS / 2)].getPosition().x, _playerLine.getPosition().y);
+    _player.InstantlyMoveTo(_tracks[floor(_level.GetNumberOfTracks() / 2)].getPosition().x, _playerLine.getPosition().y);
 }
 
 void Game::play() 
 {
     Event event;
 
-    generateLevelFromFile("levels/testcopy.txt");
-    loadMusic("music/Boogie Vice - Enter The Rave.wav", 50);
-
-    _music.play();
+    _level.GenerateLevelFromFile("levels/testcopy.txt");
+    _level.LoadMusic("music/Boogie Vice - Enter The Rave.wav", 50);
+    _level.PlayMusic();
 
     _bulletSpawnClock.restart();
 
@@ -125,7 +105,7 @@ void Game::play()
                     }
                     break;
                 case Keyboard::Right:
-                    if (_playerTrackPos < TOTAL_TRACKS - 1) {
+                    if (_playerTrackPos < _level.GetNumberOfTracks() - 1) {
                         _playerTrackPos++;
                         _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                     }
@@ -139,7 +119,7 @@ void Game::play()
         _player.UpdateMoveState();
 
         // Handle bullets
-        moveBullets(_speed);
+        moveBullets(_level.GetSpeed());
         deleteOffscreenBullets();
         spawnBullets();
 
@@ -164,15 +144,15 @@ void Game::moveBullets(int speed)
 
 void Game::spawnBullets() 
 {
-    while (!_bulletSpawns.empty() && _bulletSpawns.front().getSpawnTime() <= _bulletSpawnClock.getElapsedTime().asMilliseconds())
+    while (!_level.GetBulletSpawns().empty() && _level.GetBulletSpawns().front().getSpawnTime() <= _bulletSpawnClock.getElapsedTime().asMilliseconds())
     {
-        int trackNum = _bulletSpawns.front().getTrack();
+        int trackNum = _level.GetBulletSpawns().front().getTrack();
         float posX = _tracks[trackNum].getPosition().x;
-        float speed = _bulletSpawns.front().getSpeed();
-        Color bColor = _bulletSpawns.front().getColor();
+        float speed = _level.GetBulletSpawns().front().getSpeed();
+        Color bColor = _level.GetBulletSpawns().front().getColor();
 
         _bullets.emplace_back(posX, -325.0f, trackNum, speed, bColor);
-        _bulletSpawns.pop();
+        _level.GetBulletSpawns().pop();
     }
 }
 
@@ -194,55 +174,6 @@ void Game::deleteOffscreenBullets()
         _bullets.erase(_bullets.begin());
 }
 
-void Game::generateLevelFromFile(const char* filePath) 
-{
-    std::ifstream level(filePath);
-
-    std::string line;
-    std::vector<std::string> params;
-
-    if (!level) std::cout << "Erreur de chargement du fichier '" << filePath << "'.";
-
-    while (!_bulletSpawns.empty()) _bulletSpawns.pop();
-
-    while (level.good()) {
-
-        // Read command line from level text file
-        getline(level, line);
-
-        // Split command line into params
-        split_string(line, params);
-
-        // Tolower string
-        for (auto& c : params[0]) c = tolower(c);
-
-        // Command interpreter
-        if (params[0] == "spawn") 
-        {
-            assert(params.size() == 3);
-
-            int time = stoi(params[1]) - (1000.0 / (60.0 * _speed)) * 1000;
-
-            for (int i = 0; i < TOTAL_TRACKS; i++)
-                if (params[2][i] == '#' || params[2][i] == '%')
-                    _bulletSpawns.push({ time, i, _speed, {255, 40, 40} });
-        }
-        else if (params[0] == "speed") 
-        {
-            assert(params.size() == 2);
-
-            _speed = stoi(params[1]);
-        }
-    }
-}
-
-void Game::loadMusic(const char* filePath, float volume) 
-{
-    _music.openFromFile(filePath);
-    _music.setVolume(volume);
-    _music.setLoop(false);
-}
-
 void Game::drawAll() 
 {
     _window->clear();
@@ -259,7 +190,7 @@ void Game::drawAll()
 
 void Game::drawTracks() 
 {
-    for (int i = 0; i < TOTAL_TRACKS; i++) _window->draw(_tracks[i]);
+    for (int i = 0; i < _level.GetNumberOfTracks(); i++) _window->draw(_tracks[i]);
 }
 
 void Game::drawBullets() 
