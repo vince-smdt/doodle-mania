@@ -4,12 +4,10 @@
 #include "Flashable.hpp"
 #include "Movable.hpp"
 
-class Player : public Flashable
+class Player : public sf::CircleShape
+             , public Flashable
              , public Movable
 {
-private:
-    sf::CircleShape _shape;
-
 protected:
     void OnFlashEvent(Flashable::Event event) override;
     void OnMoveEvent(Movable::Event event) override;
@@ -19,24 +17,20 @@ public:
 
     Player();
 
-    // Init and draw
-    void Init();
-    void Draw(sf::RenderWindow& window) const;
-
-    // Hit
     void Hit();
     bool IsHit() const;
-
-    // Getters
-    int GetRadius() const;
-
-    // Debug
-    void Spin();
 };
 
 Player::Player()
-    : Movable(&_shape)
-{}
+    : Movable(this)
+{
+    setRadius(20);
+    setOrigin(20, 20);
+    setPointCount(3);
+    setFillColor(sf::Color::White);
+    setOutlineColor(sf::Color::Black);
+    setOutlineThickness(5);
+}
 
 void Player::OnFlashEvent(Flashable::Event event)
 {
@@ -54,31 +48,4 @@ void Player::Hit()
 bool Player::IsHit()const 
 {
     return Flashing();
-}
-
-void Player::Init() 
-{
-    _shape.setRadius(20);
-    _shape.setOrigin(20, 20);
-    _shape.setPointCount(3);
-    _shape.setFillColor(sf::Color::White);
-    _shape.setOutlineColor(sf::Color::Black);
-    _shape.setOutlineThickness(5);
-}
-
-void Player::Draw(sf::RenderWindow& window) const
-{
-    if (Visible())
-    {
-        window.draw(_shape);
-    }
-}
-
-int Player::GetRadius()const 
-{
-    return _shape.getRadius();
-}
-
-void Player::Spin() {
-    _shape.rotate(1);
 }

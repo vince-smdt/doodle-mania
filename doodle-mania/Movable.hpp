@@ -35,7 +35,6 @@ public:
     void InstantlyMoveTo(sf::Vector2f vector);
     void InstantlyMoveTo(float x, float y);
     void SetSpeed(float speed);
-    sf::Vector2f GetPosition() const;
     void UpdateMoveState();
 };
 
@@ -92,11 +91,6 @@ void Movable::InstantlyMoveTo(float x, float y)
 void Movable::SetSpeed(float speed)
 {
     _speed = speed;
-}
-
-sf::Vector2f Movable::GetPosition() const
-{
-    return _entity->getPosition();
 }
 
 void Movable::UpdateMoveState()

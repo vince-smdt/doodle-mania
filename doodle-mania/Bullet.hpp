@@ -3,10 +3,10 @@
 
 #include "Movable.hpp"
 
-class Bullet : public Movable
+class Bullet : public sf::CircleShape
+             , public Movable
 {
 private:
-    sf::CircleShape _shape;
     int _trackPos;        // Track number the bullet is positioned on
     float _speed;
 
@@ -17,55 +17,26 @@ public:
     // Constructers
     Bullet(float posX, float posY, int trackPos, float speed, sf::Color color);
 
-    // Init, draw and move
-    void draw(sf::RenderWindow& window);
-
-    //Set
-    void setRadius(float radius);
-    void setScale(sf::Vector2f vector);
-
-    //Get
-    int getRadius() const;
     int getTrackPos() const;
     float getSpeed() const;
 };
 
 Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color color) 
-    : Movable(&_shape)
+    : Movable(this)
     , _trackPos(trackPos)
     , _speed(speed)
 {
-    _shape.setRadius(16);
-    _shape.setOrigin(sf::Vector2f(_shape.getRadius(), _shape.getRadius()));
-    _shape.setFillColor(color);
-    _shape.setOutlineThickness(5);
-    _shape.setOutlineColor(sf::Color::Black);
+    setRadius(16);
+    setOrigin(sf::Vector2f(getRadius(), getRadius()));
+    setFillColor(color);
+    setOutlineThickness(5);
+    setOutlineColor(sf::Color::Black);
 
-    InstantlyMoveTo({ posX, posY });
+    move(posX, posY);
 }
 
 void Bullet::OnMoveEvent(Movable::Event event)
 {
-}
-
-void Bullet::draw(sf::RenderWindow& window) 
-{
-    window.draw(_shape);
-}
-
-void Bullet::setRadius(float radius) 
-{
-    _shape.setRadius(radius);
-}
-
-void Bullet::setScale(sf::Vector2f vector) 
-{
-    _shape.setScale(vector);
-}
-
-int Bullet::getRadius()const 
-{
-    return _shape.getRadius();
 }
 
 int Bullet::getTrackPos()const 

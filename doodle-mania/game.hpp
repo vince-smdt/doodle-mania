@@ -99,9 +99,6 @@ void Game::init()
 
     // Initialise player position
     _player.InstantlyMoveTo(_tracks[floor(TOTAL_TRACKS / 2)].getPosition().x, _playerLine.getPosition().y);
-
-    // Initialise player
-    _player.Init();
 }
 
 void Game::play() 
@@ -124,13 +121,13 @@ void Game::play()
                 case Keyboard::Left:
                     if (_playerTrackPos > 0) {
                         _playerTrackPos--;
-                        _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.GetPosition().y);
+                        _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                     }
                     break;
                 case Keyboard::Right:
                     if (_playerTrackPos < TOTAL_TRACKS - 1) {
                         _playerTrackPos++;
-                        _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.GetPosition().y);
+                        _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                     }
                     break;
                 }
@@ -153,7 +150,7 @@ void Game::play()
         // Draw method
         drawAll();
 
-        _player.Spin(); // test
+        _player.rotate(1); // test
     }
 }
 
@@ -179,13 +176,11 @@ void Game::spawnBullets()
     }
 }
 
-bool Game::checkBulletCollision()const 
+bool Game::checkBulletCollision() const 
 {
     for (auto& bullet : _bullets) 
     {
-        if (bullet.GetPosition().y + 10 < _player.GetPosition().y + _player.GetRadius() * 2 &&
-            bullet.GetPosition().y + bullet.getRadius() * 2 > _player.GetPosition().y &&
-            _playerTrackPos == bullet.getTrackPos())
+        if (bullet.getGlobalBounds().intersects(_player.getGlobalBounds()))
         {
             return true;
         }
@@ -195,7 +190,7 @@ bool Game::checkBulletCollision()const
 
 void Game::deleteOffscreenBullets() 
 {
-    while (!_bullets.empty() && _bullets.front().GetPosition().y > 850)
+    while (!_bullets.empty() && _bullets.front().getPosition().y > 850)
         _bullets.erase(_bullets.begin());
 }
 
@@ -256,7 +251,8 @@ void Game::drawAll()
     drawTracks();                        // Tracks
     drawBullets();                        // Bullets
     _window->draw(_playerLine);    // Other lines and shapes
-    _player.Draw(*_window);            // Player
+    if (_player.Visible())
+        _window->draw(_player);
 
     _window->display();
 }
@@ -268,5 +264,5 @@ void Game::drawTracks()
 
 void Game::drawBullets() 
 {
-    for (auto& bullet : _bullets) bullet.draw(*_window);
+    for (auto& bullet : _bullets) _window->draw(bullet);
 }
