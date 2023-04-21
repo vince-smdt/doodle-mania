@@ -2,15 +2,15 @@
 #include <SFML/Graphics.hpp>
 
 #include "Flashable.hpp"
-#include "Movable.hpp"
+#include "SmoothMovementDelegate.hpp"
 
 class Player : public sf::CircleShape
              , public Flashable
-             , public Movable
+             , public SmoothMovementDelegate
 {
 protected:
     void OnFlashEvent(Flashable::Event event) override;
-    void OnMoveEvent(Movable::Event event) override;
+    void OnMoveEvent(SmoothMovementDelegate::Event event) override;
 
 public:
     enum Direction { NONE, LEFT, RIGHT };
@@ -22,7 +22,7 @@ public:
 };
 
 Player::Player()
-    : Movable(this)
+    : SmoothMovementDelegate(this)
 {
     setRadius(20);
     setOrigin(20, 20);
@@ -36,7 +36,7 @@ void Player::OnFlashEvent(Flashable::Event event)
 {
 }
 
-void Player::OnMoveEvent(Movable::Event event)
+void Player::OnMoveEvent(SmoothMovementDelegate::Event event)
 {
 }
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-class Movable
+class SmoothMovementDelegate
 {
 private:
     enum class State
@@ -12,7 +12,7 @@ private:
 
     sf::Vector2f _aimPos;
     sf::Transformable* _entity;
-    float _speed;
+    float _easeInRate;
     State _state;
 
 protected:
@@ -22,7 +22,7 @@ protected:
         MOVE
     };
 
-    Movable(sf::Transformable* entity);
+    SmoothMovementDelegate(sf::Transformable* entity);
     virtual void OnMoveEvent(Event event) = 0;
 
 public:
@@ -34,70 +34,70 @@ public:
     void InstantlyMove(float x, float y);
     void InstantlyMoveTo(sf::Vector2f vector);
     void InstantlyMoveTo(float x, float y);
-    void SetSpeed(float speed);
+    void SetSpeed(float easeInRate);
     void UpdateMoveState();
 };
 
-Movable::Movable(sf::Transformable* entity)
+SmoothMovementDelegate::SmoothMovementDelegate(sf::Transformable* entity)
     : _entity(entity)
     , _state(State::STOPPED)
-    , _speed(0.5f)
+    , _easeInRate(0.5f)
 {}
 
-void Movable::Move(sf::Vector2f vector)
+void SmoothMovementDelegate::Move(sf::Vector2f vector)
 {
     _aimPos += vector;
 }
 
-void Movable::Move(float x, float y)
+void SmoothMovementDelegate::Move(float x, float y)
 {
     _aimPos += { x, y };
 }
 
-void Movable::MoveTo(sf::Vector2f vector)
+void SmoothMovementDelegate::MoveTo(sf::Vector2f vector)
 {
     _aimPos = vector;
 }
 
-void Movable::MoveTo(float x, float y)
+void SmoothMovementDelegate::MoveTo(float x, float y)
 {
     _aimPos = { x, y };
 }
 
-void Movable::InstantlyMove(sf::Vector2f vector)
+void SmoothMovementDelegate::InstantlyMove(sf::Vector2f vector)
 {
     _aimPos += vector;
     _entity->move(vector);
 }
 
-void Movable::InstantlyMove(float x, float y)
+void SmoothMovementDelegate::InstantlyMove(float x, float y)
 {
     _aimPos += { x, y };
     _entity->move(x, y);
 }
 
-void Movable::InstantlyMoveTo(sf::Vector2f vector)
+void SmoothMovementDelegate::InstantlyMoveTo(sf::Vector2f vector)
 {
     _aimPos = vector;
     _entity->setPosition(vector);
 }
 
-void Movable::InstantlyMoveTo(float x, float y)
+void SmoothMovementDelegate::InstantlyMoveTo(float x, float y)
 {
     _aimPos = { x, y };
     _entity->setPosition(x, y);
 }
 
-void Movable::SetSpeed(float speed)
+void SmoothMovementDelegate::SetSpeed(float easeInRate)
 {
-    _speed = speed;
+    _easeInRate = easeInRate;
 }
 
-void Movable::UpdateMoveState()
+void SmoothMovementDelegate::UpdateMoveState()
 {
     sf::Vector2f dist = _aimPos - _entity->getPosition();
     bool moving = _aimPos != _entity->getPosition();
-    float rate = 1 / _speed;
+    float rate = 1 / _easeInRate;
 
     // TODO - round up to certain decimal point to avoid micromovement delaying when MOVE events stop being sent
     _entity->move({ dist.x / rate, dist.y / rate });

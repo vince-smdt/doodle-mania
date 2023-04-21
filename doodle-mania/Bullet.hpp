@@ -1,19 +1,19 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Movable.hpp"
+#include "SmoothMovementDelegate.hpp"
 
 #define BULLET_RADIUS 16
 
 class Bullet : public sf::CircleShape
-             , public Movable
+             , public SmoothMovementDelegate
 {
 private:
     int _trackPos;        // Track number the bullet is positioned on
     float _speed;
 
 protected:
-    void OnMoveEvent(Movable::Event event) override;
+    void OnMoveEvent(SmoothMovementDelegate::Event event) override;
 
 public:
     // Constructers
@@ -24,7 +24,7 @@ public:
 };
 
 Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color color) 
-    : Movable(this)
+    : SmoothMovementDelegate(this)
     , _trackPos(trackPos)
     , _speed(speed)
 {
@@ -37,7 +37,7 @@ Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color colo
     move(posX, posY);
 }
 
-void Bullet::OnMoveEvent(Movable::Event event)
+void Bullet::OnMoveEvent(SmoothMovementDelegate::Event event)
 {
 }
 

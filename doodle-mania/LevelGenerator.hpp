@@ -7,7 +7,6 @@
 
 namespace LevelGenerator {
     static std::shared_ptr<Level> GenerateFromFile(const char* filePath);
-
 };
 
 std::shared_ptr<Level> LevelGenerator::GenerateFromFile(const char* filePath)

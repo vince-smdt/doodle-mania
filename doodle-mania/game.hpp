@@ -36,10 +36,10 @@ public:
     void play();
 
     // Bullet methods
-    void moveBullets(int speed);                // move all bullets
-    void spawnBullets();                        // Spawn bullets that are ready to spawn with _bulletSpawns
-    bool PlayerCollidesWithBullet()const;            // Check if player is colliding with any bullets
-    void deleteOffscreenBullets();                // Delete all bullets that are offscreen
+    void moveBullets();                     // move all bullets
+    void spawnBullets();                    // Spawn bullets that are ready to spawn with _bulletSpawns
+    bool PlayerCollidesWithBullet()const;   // Check if player is colliding with any bullets
+    void deleteOffscreenBullets();          // Delete all bullets that are offscreen
 
     // Draw methods
     void draw();
@@ -118,7 +118,7 @@ void Game::play()
         _player.UpdateMoveState();
 
         // Handle bullets
-        moveBullets(_level->GetSpeed());
+        moveBullets();
         deleteOffscreenBullets();
         spawnBullets();
 
@@ -133,7 +133,7 @@ void Game::play()
     }
 }
 
-void Game::moveBullets(int speed)
+void Game::moveBullets()
 {
     for (auto& bullet : _bullets)
     {

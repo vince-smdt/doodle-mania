@@ -38,10 +38,13 @@
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Movable.hpp">
+    <ClInclude Include="LevelGenerator.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LevelGenerator.hpp">
+    <ClInclude Include="SmoothMovementDelegate.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
