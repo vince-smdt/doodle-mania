@@ -140,7 +140,7 @@
     <ClInclude Include="Bullet.hpp" />
     <ClInclude Include="bulletSpawn.hpp" />
     <ClInclude Include="Flashable.hpp" />
-    <ClInclude Include="game.hpp" />
+    <ClInclude Include="Game.hpp" />
     <ClInclude Include="LevelGenerator.hpp" />
     <ClInclude Include="Movable.hpp" />
     <ClInclude Include="Player.hpp" />

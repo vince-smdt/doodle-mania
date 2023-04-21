@@ -29,7 +29,7 @@
     <ClInclude Include="Flashable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="game.hpp">
+    <ClInclude Include="Game.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Player.hpp">
@@ -41,10 +41,11 @@
     <ClInclude Include="Movable.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LevelGenerator.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\sfmlGames\Doodle_Mania\Doodle_Mania\Release\levels\testcopy.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
+    <Text Include="levels\testcopy.txt" />
   </ItemGroup>
 </Project>

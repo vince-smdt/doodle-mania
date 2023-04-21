@@ -3,6 +3,8 @@
 
 #include "Movable.hpp"
 
+#define BULLET_RADIUS 16
+
 class Bullet : public sf::CircleShape
              , public Movable
 {
@@ -26,7 +28,7 @@ Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color colo
     , _trackPos(trackPos)
     , _speed(speed)
 {
-    setRadius(16);
+    setRadius(BULLET_RADIUS);
     setOrigin(sf::Vector2f(getRadius(), getRadius()));
     setFillColor(color);
     setOutlineThickness(5);
