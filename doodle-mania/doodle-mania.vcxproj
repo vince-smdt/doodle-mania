@@ -145,7 +145,7 @@
     <ClInclude Include="LevelGenerator.hpp" />
     <ClInclude Include="SmoothMovementDelegate.hpp" />
     <ClInclude Include="Player.hpp" />
-    <ClInclude Include="utils.h" />
+    <ClInclude Include="Utils.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="levels\testcopy.txt" />

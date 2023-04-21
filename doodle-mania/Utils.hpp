@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-#include <iostream>
+#include <string>
 
-std::vector<std::string> split_string(std::string s, std::vector<std::string>& vec)
+std::vector<std::string> SplitString(std::string s, std::vector<std::string>& vec)
 {
     vec.clear();
 

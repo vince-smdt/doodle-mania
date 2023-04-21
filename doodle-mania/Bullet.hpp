@@ -6,14 +6,10 @@
 #define BULLET_RADIUS 16
 
 class Bullet : public sf::CircleShape
-             , public SmoothMovementDelegate
 {
 private:
     int _trackPos;        // Track number the bullet is positioned on
     float _speed;
-
-protected:
-    void OnMoveEvent(SmoothMovementDelegate::Event event) override;
 
 public:
     // Constructers
@@ -24,8 +20,7 @@ public:
 };
 
 Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color color) 
-    : SmoothMovementDelegate(this)
-    , _trackPos(trackPos)
+    : _trackPos(trackPos)
     , _speed(speed)
 {
     setRadius(BULLET_RADIUS);
@@ -33,12 +28,7 @@ Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color colo
     setFillColor(color);
     setOutlineThickness(5);
     setOutlineColor(sf::Color::Black);
-
-    move(posX, posY);
-}
-
-void Bullet::OnMoveEvent(SmoothMovementDelegate::Event event)
-{
+    setPosition(posX, posY);
 }
 
 int Bullet::getTrackPos()const 

@@ -137,7 +137,7 @@ void Game::moveBullets()
 {
     for (auto& bullet : _bullets)
     {
-        bullet.InstantlyMove(Vector2f(0.0f, bullet.getSpeed()));
+        bullet.move(0.0f, bullet.getSpeed());
     }
 }
 
