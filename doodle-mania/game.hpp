@@ -1,10 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <fstream>
 #include <list>
 
 #include "bullet.hpp"
 #include "Level.hpp"
+#include "LevelGenerator.hpp"
 #include "player.hpp"
 
 #define TRACKS_DIST_APART 70
@@ -15,7 +15,7 @@ class Game {
 private:
     RenderWindow* _window;
 
-    Level _level;
+    std::shared_ptr<Level> _level;
 
     Player _player;
     int _playerTrackPos;
@@ -55,11 +55,13 @@ Game::Game(RenderWindow& window)
 
 void Game::init()
 {
-    _playerTrackPos = _level.GetNumberOfTracks() / 2;
+    _level = LevelGenerator::GenerateFromFile("levels/testcopy.txt");
+
+    _playerTrackPos = _level->GetNumberOfTracks() / 2;
 
     // Initialise tracks
-    _tracks.resize(_level.GetNumberOfTracks());
-    for (__int64 i = 0; i < _level.GetNumberOfTracks(); i++)
+    _tracks.resize(_level->GetNumberOfTracks());
+    for (__int64 i = 0; i < _level->GetNumberOfTracks(); i++)
     {
         _tracks[i].setSize(Vector2f(4, _window->getSize().y));
         _tracks[i].setOrigin(Vector2f(2, _tracks[i].getSize().y));
@@ -79,16 +81,15 @@ void Game::init()
     _playerLine.setPosition(Vector2f(_window->getSize().x / 2, _window->getSize().y / 1.2));
 
     // Initialise player position
-    _player.InstantlyMoveTo(_tracks[floor(_level.GetNumberOfTracks() / 2)].getPosition().x, _playerLine.getPosition().y);
+    _player.InstantlyMoveTo(_tracks[_playerTrackPos].getPosition().x, _playerLine.getPosition().y);
 }
 
 void Game::play() 
 {
     Event event;
 
-    _level.GenerateLevelFromFile("levels/testcopy.txt");
-    _level.LoadMusic("music/Boogie Vice - Enter The Rave.wav", 50);
-    _level.PlayMusic();
+    _level->LoadMusic("music/Boogie Vice - Enter The Rave.wav", 50);
+    _level->PlayMusic();
 
     _bulletSpawnClock.restart();
 
@@ -105,7 +106,7 @@ void Game::play()
                     }
                     break;
                 case Keyboard::Right:
-                    if (_playerTrackPos < _level.GetNumberOfTracks() - 1) {
+                    if (_playerTrackPos < _level->GetNumberOfTracks() - 1) {
                         _playerTrackPos++;
                         _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                     }
@@ -119,7 +120,7 @@ void Game::play()
         _player.UpdateMoveState();
 
         // Handle bullets
-        moveBullets(_level.GetSpeed());
+        moveBullets(_level->GetSpeed());
         deleteOffscreenBullets();
         spawnBullets();
 
@@ -144,15 +145,15 @@ void Game::moveBullets(int speed)
 
 void Game::spawnBullets() 
 {
-    while (!_level.GetBulletSpawns().empty() && _level.GetBulletSpawns().front().getSpawnTime() <= _bulletSpawnClock.getElapsedTime().asMilliseconds())
+    while (!_level->GetBulletSpawns().empty() && _level->GetBulletSpawns().front().getSpawnTime() <= _bulletSpawnClock.getElapsedTime().asMilliseconds())
     {
-        int trackNum = _level.GetBulletSpawns().front().getTrack();
+        int trackNum = _level->GetBulletSpawns().front().getTrack();
         float posX = _tracks[trackNum].getPosition().x;
-        float speed = _level.GetBulletSpawns().front().getSpeed();
-        Color bColor = _level.GetBulletSpawns().front().getColor();
+        float speed = _level->GetBulletSpawns().front().getSpeed();
+        Color bColor = _level->GetBulletSpawns().front().getColor();
 
         _bullets.emplace_back(posX, -325.0f, trackNum, speed, bColor);
-        _level.GetBulletSpawns().pop();
+        _level->GetBulletSpawns().pop();
     }
 }
 
@@ -179,8 +180,8 @@ void Game::drawAll()
     _window->clear();
 
     _window->draw(_background);    // Background
-    drawTracks();                        // Tracks
-    drawBullets();                        // Bullets
+    drawTracks();                  // Tracks
+    drawBullets();                 // Bullets
     _window->draw(_playerLine);    // Other lines and shapes
     if (_player.Visible())
         _window->draw(_player);
@@ -190,7 +191,7 @@ void Game::drawAll()
 
 void Game::drawTracks() 
 {
-    for (int i = 0; i < _level.GetNumberOfTracks(); i++) _window->draw(_tracks[i]);
+    for (int i = 0; i < _level->GetNumberOfTracks(); i++) _window->draw(_tracks[i]);
 }
 
 void Game::drawBullets() 

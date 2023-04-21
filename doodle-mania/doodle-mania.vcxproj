@@ -141,12 +141,13 @@
     <ClInclude Include="bulletSpawn.hpp" />
     <ClInclude Include="Flashable.hpp" />
     <ClInclude Include="game.hpp" />
+    <ClInclude Include="LevelGenerator.hpp" />
     <ClInclude Include="Movable.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\sfmlGames\Doodle_Mania\Doodle_Mania\Release\levels\testcopy.txt" />
+    <Text Include="levels\testcopy.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
