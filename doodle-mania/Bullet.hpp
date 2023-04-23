@@ -3,20 +3,19 @@
 
 #include "SmoothMovementDelegate.hpp"
 
-#define BULLET_RADIUS 16
-
 class Bullet : public sf::CircleShape
 {
 private:
-    int _trackPos;        // Track number the bullet is positioned on
+    static const int BULLET_RADIUS = 16;
+
+    int _trackPos;
     float _speed;
 
 public:
-    // Constructers
     Bullet(float posX, float posY, int trackPos, float speed, sf::Color color);
 
-    int getTrackPos() const;
-    float getSpeed() const;
+    int GetTrackPos() const;
+    float GetSpeed() const;
 };
 
 Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color color) 
@@ -31,12 +30,12 @@ Bullet::Bullet(float posX, float posY, int trackPos, float speed, sf::Color colo
     setPosition(posX, posY);
 }
 
-int Bullet::getTrackPos()const 
+int Bullet::GetTrackPos()const 
 {
     return _trackPos;
 }
 
-float Bullet::getSpeed() const
+float Bullet::GetSpeed() const
 {
     return _speed;
 }

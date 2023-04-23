@@ -4,7 +4,7 @@
 class BulletSpawn {
 private:
     int _spawnTime;        // In milliseconds
-    int _track;            // Which track index
+    int _track;            // Track position index
     int _speed;            // Bullet speed
     sf::Color _color;      // Bullet color
 
@@ -16,10 +16,10 @@ public:
     ~BulletSpawn();
 
     // Getters
-    int getSpawnTime()const;
-    int getTrack()const;
-    int getSpeed()const;
-    sf::Color getColor()const;
+    int GetSpawnTime() const;
+    int GetTrack() const;
+    int GetSpeed() const;
+    sf::Color GetColor() const;
 
 };
 
@@ -44,22 +44,22 @@ BulletSpawn::~BulletSpawn()
     _track = 0;
 }
 
-int BulletSpawn::getSpawnTime()const 
+int BulletSpawn::GetSpawnTime()const 
 {
     return _spawnTime;
 }
 
-int BulletSpawn::getTrack()const 
+int BulletSpawn::GetTrack()const 
 {
     return _track;
 }
 
-int BulletSpawn::getSpeed()const 
+int BulletSpawn::GetSpeed()const 
 {
     return _speed;
 }
 
-sf::Color BulletSpawn::getColor()const
+sf::Color BulletSpawn::GetColor()const
 {
     return _color;
 }

@@ -26,30 +26,25 @@ private:
     sf::RectangleShape _background;
 
 public:
-    // Constructor
     GameState(sf::RenderWindow& window);
 
-    // Init methods and play
-    void init();
-    void play();
+    void Init();
+    void Play();
+    void Draw();
 
-    // Bullet methods
-    void moveBullets();                     // move all bullets
-    void spawnBullets();                    // Spawn bullets that are ready to spawn with _bulletSpawns
-    bool PlayerCollidesWithBullet()const;   // Check if player is colliding with any bullets
-    void deleteOffscreenBullets();          // Delete all bullets that are offscreen
-
-    // Draw methods
-    void draw();
+    void MoveBullets();
+    void SpawnBullets();
+    bool PlayerCollidesWithBullet()const;
+    void DeleteOffscreenBullets();
 };
 
 GameState::GameState(sf::RenderWindow& window)
 {
     _window = &window;
-    init();
+    Init();
 }
 
-void GameState::init()
+void GameState::Init()
 {
     _level = LevelGenerator::GenerateFromFile("levels/testcopy.txt");
 
@@ -80,7 +75,7 @@ void GameState::init()
     _player.InstantlyMoveTo(_tracks[_playerTrackPos].getPosition().x, _playerLine.getPosition().y);
 }
 
-void GameState::play()
+void GameState::Play()
 {
     sf::Event event;
 
@@ -120,9 +115,9 @@ void GameState::play()
         _player.UpdateMoveState();
 
         // Handle bullets
-        moveBullets();
-        deleteOffscreenBullets();
-        spawnBullets();
+        MoveBullets();
+        DeleteOffscreenBullets();
+        SpawnBullets();
 
         // Check if player is hit by bullet
         if (PlayerCollidesWithBullet() && !_player.IsHit())
@@ -131,26 +126,39 @@ void GameState::play()
         _player.rotate(1);
 
         // Draw method
-        draw();
+        Draw();
     }
 }
 
-void GameState::moveBullets()
+void GameState::Draw()
+{
+    _window->clear();
+
+    _window->draw(_background);                             // Background
+    for (auto& track : _tracks) _window->draw(track);       // Tracks
+    for (auto& bullet : _bullets) _window->draw(bullet);    // Bullets
+    _window->draw(_playerLine);                             // Other lines and shapes
+    if (_player.Visible()) _window->draw(_player);          // Player
+
+    _window->display();
+}
+
+void GameState::MoveBullets()
 {
     for (auto& bullet : _bullets)
     {
-        bullet.move(0.0f, bullet.getSpeed());
+        bullet.move(0.0f, bullet.GetSpeed());
     }
 }
 
-void GameState::spawnBullets()
+void GameState::SpawnBullets()
 {
-    while (!_level->GetBulletSpawns().empty() && _level->GetBulletSpawns().front().getSpawnTime() <= _bulletSpawnClock.getElapsedTime().asMilliseconds())
+    while (!_level->GetBulletSpawns().empty() && _level->GetBulletSpawns().front().GetSpawnTime() <= _bulletSpawnClock.getElapsedTime().asMilliseconds())
     {
-        int trackNum = _level->GetBulletSpawns().front().getTrack();
+        int trackNum = _level->GetBulletSpawns().front().GetTrack();
         float posX = _tracks[trackNum].getPosition().x;
-        float speed = _level->GetBulletSpawns().front().getSpeed();
-        sf::Color bColor = _level->GetBulletSpawns().front().getColor();
+        float speed = _level->GetBulletSpawns().front().GetSpeed();
+        sf::Color bColor = _level->GetBulletSpawns().front().GetColor();
 
         _bullets.emplace_back(posX, -325.0f, trackNum, speed, bColor);
         _level->GetBulletSpawns().pop();
@@ -169,23 +177,10 @@ bool GameState::PlayerCollidesWithBullet() const
     return false;
 }
 
-void GameState::deleteOffscreenBullets()
+void GameState::DeleteOffscreenBullets()
 {
-    while (!_bullets.empty() && _bullets.front().getPosition().y > _window->getSize().y + BULLET_RADIUS * 2)
+    while (!_bullets.empty() && _bullets.front().getPosition().y > _window->getSize().y + _bullets.front().getRadius() * 2)
     {
         _bullets.erase(_bullets.begin());
     }
-}
-
-void GameState::draw()
-{
-    _window->clear();
-
-    _window->draw(_background);                             // Background
-    for (auto& track : _tracks) _window->draw(track);       // Tracks
-    for (auto& bullet : _bullets) _window->draw(bullet);    // Bullets
-    _window->draw(_playerLine);                             // Other lines and shapes
-    if (_player.Visible()) _window->draw(_player);          // Player
-
-    _window->display();
 }

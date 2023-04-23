@@ -12,5 +12,5 @@ int main()
     window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 
     GameState game(window);
-    game.play();
+    game.Play();
 }
