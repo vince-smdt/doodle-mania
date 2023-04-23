@@ -1,46 +1,7 @@
-#pragma once
-#include <SFML/Graphics.hpp>
-
-class SmoothMovementDelegate
-{
-private:
-    enum class State
-    {
-        STOPPED,
-        MOVING
-    };
-
-    sf::Vector2f _aimPos;
-    sf::Transformable* _entity;
-    float _easeInRate;
-    State _state;
-
-protected:
-    enum class Event
-    {
-        NONE,
-        MOVE
-    };
-
-    SmoothMovementDelegate(sf::Transformable* entity);
-    virtual void OnMoveEvent(Event event) = 0;
-
-public:
-    void Move(sf::Vector2f vector);
-    void Move(float x, float y);
-    void MoveTo(sf::Vector2f vector);
-    void MoveTo(float x, float y);
-    void InstantlyMove(sf::Vector2f vector);
-    void InstantlyMove(float x, float y);
-    void InstantlyMoveTo(sf::Vector2f vector);
-    void InstantlyMoveTo(float x, float y);
-    void SetSpeed(float easeInRate);
-    void UpdateMoveState();
-};
+#include "SmoothMovementDelegate.h"
 
 SmoothMovementDelegate::SmoothMovementDelegate(sf::Transformable* entity)
     : _entity(entity)
-    , _state(State::STOPPED)
     , _easeInRate(0.5f)
 {}
 
@@ -101,5 +62,4 @@ void SmoothMovementDelegate::UpdateMoveState()
 
     // TODO - round up to certain decimal point to avoid micromovement delaying when MOVE events stop being sent
     _entity->move({ dist.x / rate, dist.y / rate });
-    OnMoveEvent(moving ? Event::MOVE : Event::NONE);
 }

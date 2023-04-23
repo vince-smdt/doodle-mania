@@ -134,18 +134,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletSpawn.cpp" />
+    <ClCompile Include="Flashable.cpp" />
+    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="EntryPoint.cpp" />
+    <ClCompile Include="LevelGenerator.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SmoothMovementDelegate.cpp" />
+    <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bullet.hpp" />
-    <ClInclude Include="BulletSpawn.hpp" />
-    <ClInclude Include="Flashable.hpp" />
-    <ClInclude Include="GameState.hpp" />
-    <ClInclude Include="Level.hpp" />
-    <ClInclude Include="LevelGenerator.hpp" />
-    <ClInclude Include="SmoothMovementDelegate.hpp" />
-    <ClInclude Include="Player.hpp" />
-    <ClInclude Include="Utils.hpp" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletSpawn.h" />
+    <ClInclude Include="Flashable.h" />
+    <ClInclude Include="GameState.h" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="LevelGenerator.h" />
+    <ClInclude Include="SmoothMovementDelegate.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="levels\testcopy.txt" />

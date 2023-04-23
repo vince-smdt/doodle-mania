@@ -1,6 +1,4 @@
-#pragma once
-#include <vector>
-#include <string>
+#include "Utils.h"
 
 std::vector<std::string> SplitString(std::string s, std::vector<std::string>& vec)
 {

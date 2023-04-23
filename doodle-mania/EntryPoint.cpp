@@ -1,5 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include "GameState.hpp"
+#include "GameState.h"
 
 int main() 
 {

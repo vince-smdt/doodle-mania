@@ -1,20 +1,6 @@
-#pragma once
-#include <fstream>
-#include <iostream>
-#include <memory>
-
-#include "Level.hpp"
-#include "Utils.hpp"
-
-namespace LevelGenerator
-{
-    std::shared_ptr<Level> level;
-    std::vector<std::string> params;
-
-    static std::shared_ptr<Level> GenerateFromFile(const char* filePath);
-    static void ProcessCommand();
-    static void CreateBulletSpawn();
-};
+#include "Level.h"
+#include "LevelGenerator.h"
+#include "Utils.h"
 
 std::shared_ptr<Level> LevelGenerator::GenerateFromFile(const char* filePath)
 {
@@ -53,6 +39,7 @@ void LevelGenerator::CreateBulletSpawn()
     int hitTime = stoi(params[1]);
     std::string bulletLayout = params[2];
     int speed = stoi(params[3]);
+    sf::Color color(255, 40, 40);
 
     assert(bulletLayout.size() == level->GetNumberOfTracks());
 
@@ -60,5 +47,5 @@ void LevelGenerator::CreateBulletSpawn()
 
     for (int i = 0; i < level->GetNumberOfTracks(); i++)
         if (bulletLayout[i] == '#')
-            level->GetBulletSpawns().push({ time, i, speed, {255, 40, 40} });
+            level->GetBulletSpawns().emplace(time, i, speed, color);
 }
