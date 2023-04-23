@@ -1,26 +1,25 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-using namespace sf;
 
 class BulletSpawn {
 private:
     int _spawnTime;        // In milliseconds
     int _track;            // Which track index
     int _speed;            // Bullet speed
-    Color _color;        // Bullet color
+    sf::Color _color;      // Bullet color
 
 public:
 
     // Constructers
     BulletSpawn();
-    BulletSpawn(int spawnTime, int track, int speed, Color color);
+    BulletSpawn(int spawnTime, int track, int speed, sf::Color color);
     ~BulletSpawn();
 
     // Getters
     int getSpawnTime()const;
     int getTrack()const;
     int getSpeed()const;
-    Color getColor()const;
+    sf::Color getColor()const;
 
 };
 
@@ -31,7 +30,7 @@ BulletSpawn::BulletSpawn()
     _speed = 0;
 }
 
-BulletSpawn::BulletSpawn(int spawnTime, int track, int speed, Color color) 
+BulletSpawn::BulletSpawn(int spawnTime, int track, int speed, sf::Color color)
 {
     _spawnTime = spawnTime;
     _track = track;
@@ -60,7 +59,7 @@ int BulletSpawn::getSpeed()const
     return _speed;
 }
 
-Color BulletSpawn::getColor()const 
+sf::Color BulletSpawn::getColor()const
 {
     return _color;
 }
