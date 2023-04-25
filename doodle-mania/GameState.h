@@ -5,15 +5,18 @@
 #include "Bullet.h"
 #include "LevelGenerator.h"
 #include "Player.h"
+#include "state/State.hpp"
 
 // Forward declarations
+struct GameData;
 class Level;
 
-class GameState {
+class GameState : public State
+{
 private:
     static const int TRACKS_DIST_APART = 70;
 
-    sf::RenderWindow* _window;
+    std::shared_ptr<GameData> _data;
 
     std::shared_ptr<Level> _level;
 
@@ -28,14 +31,15 @@ private:
     sf::RectangleShape _background;
 
 public:
-    GameState(sf::RenderWindow& window);
+    GameState(std::shared_ptr<GameData> data);
 
-    void Init();
-    void Play();
-    void Draw();
+    void Init() override;
+    void HandleInput(sf::Event event) override;
+    void Update(float delta) override;
+    void Draw(float delta) const override;
 
     void MoveBullets();
     void SpawnBullets();
-    bool PlayerCollidesWithBullet()const;
+    bool PlayerCollidesWithBullet() const;
     void DeleteOffscreenBullets();
 };

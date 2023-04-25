@@ -134,26 +134,35 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletSpawn.cpp" />
     <ClCompile Include="Flashable.cpp" />
+    <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="EntryPoint.cpp" />
     <ClCompile Include="LevelGenerator.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SmoothMovementDelegate.cpp" />
+    <ClCompile Include="state\StateMachine.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssetManager.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletSpawn.h" />
     <ClInclude Include="Flashable.h" />
+    <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelGenerator.h" />
     <ClInclude Include="SmoothMovementDelegate.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="state\State.hpp" />
+    <ClInclude Include="state\StateMachine.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>

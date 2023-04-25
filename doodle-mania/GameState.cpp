@@ -1,9 +1,10 @@
+#include "Game.h"
 #include "GameState.h"
 #include "Level.h"
 
-GameState::GameState(sf::RenderWindow& window)
+GameState::GameState(std::shared_ptr<GameData> data)
+    : _data(data)
 {
-    _window = &window;
     Init();
 }
 
@@ -17,93 +18,90 @@ void GameState::Init()
     _tracks.resize(_level->GetNumberOfTracks());
     for (unsigned int i = 0; i < _level->GetNumberOfTracks(); i++)
     {
-        _tracks[i].setSize(sf::Vector2f(4, _window->getSize().y));
+        _tracks[i].setSize(sf::Vector2f(4, _data->window.getSize().y));
         _tracks[i].setOrigin(sf::Vector2f(2, _tracks[i].getSize().y));
-        _tracks[i].setPosition(sf::Vector2f(((_window->getSize().x / 2) - (floor(_tracks.size() / 2) * TRACKS_DIST_APART)) + (i * TRACKS_DIST_APART), _tracks[i].getSize().y));
+        _tracks[i].setPosition(sf::Vector2f(((_data->window.getSize().x / 2) - (floor(_tracks.size() / 2) * TRACKS_DIST_APART)) + (i * TRACKS_DIST_APART), _tracks[i].getSize().y));
         _tracks[i].setFillColor(sf::Color(100, 100, 100));
     }
 
     // Initialise background
     _background.setFillColor(sf::Color::White);
-    _background.setSize(sf::Vector2f(_window->getSize().x, _window->getSize().y));
+    _background.setSize(sf::Vector2f(_data->window.getSize().x, _data->window.getSize().y));
     _background.setPosition(sf::Vector2f(0, 0));
 
     // Initialise additional shapes
     _playerLine.setFillColor(sf::Color(100, 100, 100));
     _playerLine.setSize(sf::Vector2f(TRACKS_DIST_APART * (_tracks.size() - 1), 4));
     _playerLine.setOrigin(sf::Vector2f(_playerLine.getSize().x / 2, _playerLine.getSize().y / 2));
-    _playerLine.setPosition(sf::Vector2f(_window->getSize().x / 2, _window->getSize().y / 1.2));
+    _playerLine.setPosition(sf::Vector2f(_data->window.getSize().x / 2, _data->window.getSize().y / 1.2));
 
     // Initialise player position
     _player.InstantlyMoveTo(_tracks[_playerTrackPos].getPosition().x, _playerLine.getPosition().y);
-}
 
-void GameState::Play()
-{
-    sf::Event event;
-
+    // Start music and restart clocks
     _level->LoadMusic("music/Boogie Vice - Enter The Rave.wav", 50);
     _level->PlayMusic();
-
     _bulletSpawnClock.restart();
+}
 
-    while (_window->isOpen()) {
-        while (_window->pollEvent(event)) {
-            if (event.type == sf::Event::Closed)
-                _window->close();
-            if (event.type == sf::Event::KeyPressed) {
-                switch (event.key.code) {
-                    case sf::Keyboard::Left:
-                    {
-                        if (_playerTrackPos > 0) {
-                            _playerTrackPos--;
-                            _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
-                        }
-                        break;
-                    }
-                    case sf::Keyboard::Right:
-                    {
-                        if (_playerTrackPos < _level->GetNumberOfTracks() - 1) {
-                            _playerTrackPos++;
-                            _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
-                        }
-                        break;
-                    }
+void GameState::HandleInput(sf::Event event)
+{
+    if (event.type == sf::Event::Closed)
+    {
+        _data->window.close();
+    }
+    if (event.type == sf::Event::KeyPressed) {
+        switch (event.key.code) {
+            case sf::Keyboard::Left:
+            {
+                if (_playerTrackPos > 0) {
+                    _playerTrackPos--;
+                    _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                 }
+                break;
+            }
+            case sf::Keyboard::Right:
+            {
+                if (_playerTrackPos < _level->GetNumberOfTracks() - 1) {
+                    _playerTrackPos++;
+                    _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
+                }
+                break;
             }
         }
-
-        // Update player states
-        _player.UpdateFlashState();
-        _player.UpdateMoveState();
-
-        // Handle bullets
-        MoveBullets();
-        DeleteOffscreenBullets();
-        SpawnBullets();
-
-        // Check if player is hit by bullet
-        if (PlayerCollidesWithBullet() && !_player.IsHit())
-            _player.Hit();
-
-        _player.rotate(1);
-
-        // Draw method
-        Draw();
     }
 }
 
-void GameState::Draw()
+void GameState::Update(float delta)
 {
-    _window->clear();
+    // Update player states
+    _player.UpdateFlashState();
+    _player.UpdateMoveState();
 
-    _window->draw(_background);                             // Background
-    for (auto& track : _tracks) _window->draw(track);       // Tracks
-    for (auto& bullet : _bullets) _window->draw(bullet);    // Bullets
-    _window->draw(_playerLine);                             // Other lines and shapes
-    if (_player.Visible()) _window->draw(_player);          // Player
+    // Handle bullets
+    MoveBullets();
+    DeleteOffscreenBullets();
+    SpawnBullets();
 
-    _window->display();
+    // Check if player/bullet collision
+    if (PlayerCollidesWithBullet() && !_player.IsHit())
+        _player.Hit();
+
+    _player.rotate(1);
+    Draw(0.0f);
+}
+
+void GameState::Draw(float delta) const
+{
+    _data->window.clear();
+
+    _data->window.draw(_background);                             // Background
+    for (auto& track : _tracks) _data->window.draw(track);       // Tracks
+    for (auto& bullet : _bullets) _data->window.draw(bullet);    // Bullets
+    _data->window.draw(_playerLine);                             // Other lines and shapes
+    if (_player.Visible()) _data->window.draw(_player);          // Player
+
+    _data->window.display();
 }
 
 void GameState::MoveBullets()
@@ -142,7 +140,7 @@ bool GameState::PlayerCollidesWithBullet() const
 
 void GameState::DeleteOffscreenBullets()
 {
-    while (!_bullets.empty() && _bullets.front().getPosition().y > _window->getSize().y + _bullets.front().getRadius() * 2)
+    while (!_bullets.empty() && _bullets.front().getPosition().y > _data->window.getSize().y + _bullets.front().getRadius() * 2)
     {
         _bullets.erase(_bullets.begin());
     }
