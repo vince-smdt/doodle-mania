@@ -6,7 +6,9 @@ Game::Game()
 
     _data->window.create(sf::VideoMode(800, 800), "Doodle Mania", sf::Style::Close | sf::Style::Titlebar);
 
-    _data->machine.AddState(StateRef(new GameState(_data)));
+    _data->assets.LoadFont("font_raleway", "fonts/Raleway-Medium.ttf");
+
+    _data->machine.AddState(StateRef(new MainMenuState(_data)));
 
     srand(time(0));
 }

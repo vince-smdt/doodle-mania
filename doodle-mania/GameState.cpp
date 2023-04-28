@@ -14,7 +14,7 @@ void GameState::Init()
 
     _playerTrackPos = _level->GetNumberOfTracks() / 2;
 
-    // Initialise tracks
+    // Initialize tracks
     _tracks.resize(_level->GetNumberOfTracks());
     for (unsigned int i = 0; i < _level->GetNumberOfTracks(); i++)
     {
@@ -24,18 +24,18 @@ void GameState::Init()
         _tracks[i].setFillColor(sf::Color(100, 100, 100));
     }
 
-    // Initialise background
+    // Initialize background
     _background.setFillColor(sf::Color::White);
     _background.setSize(sf::Vector2f(_data->window.getSize().x, _data->window.getSize().y));
     _background.setPosition(sf::Vector2f(0, 0));
 
-    // Initialise additional shapes
+    // Initialize additional shapes
     _playerLine.setFillColor(sf::Color(100, 100, 100));
     _playerLine.setSize(sf::Vector2f(TRACKS_DIST_APART * (_tracks.size() - 1), 4));
     _playerLine.setOrigin(sf::Vector2f(_playerLine.getSize().x / 2, _playerLine.getSize().y / 2));
     _playerLine.setPosition(sf::Vector2f(_data->window.getSize().x / 2, _data->window.getSize().y / 1.2));
 
-    // Initialise player position
+    // Initialize player position
     _player.InstantlyMoveTo(_tracks[_playerTrackPos].getPosition().x, _playerLine.getPosition().y);
 
     // Start music and restart clocks
@@ -50,11 +50,14 @@ void GameState::HandleInput(sf::Event event)
     {
         _data->window.close();
     }
-    if (event.type == sf::Event::KeyPressed) {
-        switch (event.key.code) {
+    if (event.type == sf::Event::KeyPressed)
+    {
+        switch (event.key.code)
+        {
             case sf::Keyboard::Left:
             {
-                if (_playerTrackPos > 0) {
+                if (_playerTrackPos > 0)
+                {
                     _playerTrackPos--;
                     _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                 }
@@ -62,7 +65,8 @@ void GameState::HandleInput(sf::Event event)
             }
             case sf::Keyboard::Right:
             {
-                if (_playerTrackPos < _level->GetNumberOfTracks() - 1) {
+                if (_playerTrackPos < _level->GetNumberOfTracks() - 1)
+                {
                     _playerTrackPos++;
                     _player.MoveTo(_tracks[_playerTrackPos].getPosition().x, _player.getPosition().y);
                 }

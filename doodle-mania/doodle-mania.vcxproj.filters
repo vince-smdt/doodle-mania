@@ -13,10 +13,10 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\state">
+    <Filter Include="Header Files\State">
       <UniqueIdentifier>{4ef7efa0-57ac-4997-ba44-29049dfc5b1f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\state">
+    <Filter Include="Source Files\State">
       <UniqueIdentifier>{567a622c-3b56-4e10-91e4-5b26f0671657}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -52,7 +52,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="state\StateMachine.cpp">
-      <Filter>Source Files\state</Filter>
+      <Filter>Source Files\State</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Source Files</Filter>
@@ -61,6 +61,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Button.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -102,10 +108,16 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="state\State.hpp">
-      <Filter>Header Files\state</Filter>
+      <Filter>Header Files\State</Filter>
     </ClInclude>
     <ClInclude Include="state\StateMachine.h">
-      <Filter>Header Files\state</Filter>
+      <Filter>Header Files\State</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

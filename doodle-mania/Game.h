@@ -5,9 +5,9 @@
 #include <string>
 
 #include "AssetManager.h"
-#include "GameState.h"
+#include "MainMenuState.h"
 #include "InputManager.h"
-#include "state/StateMachine.h"
+#include "State/StateMachine.h"
 
 struct GameData
 {

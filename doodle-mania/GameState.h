@@ -5,7 +5,7 @@
 #include "Bullet.h"
 #include "LevelGenerator.h"
 #include "Player.h"
-#include "state/State.hpp"
+#include "State/State.hpp"
 
 // Forward declarations
 struct GameData;
