@@ -138,6 +138,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletSpawn.cpp" />
     <ClCompile Include="Button.cpp" />
+    <ClCompile Include="EditorState.cpp" />
     <ClCompile Include="Flashable.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameState.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletSpawn.h" />
     <ClInclude Include="Button.h" />
+    <ClInclude Include="EditorState.h" />
     <ClInclude Include="Flashable.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="GameState.h" />

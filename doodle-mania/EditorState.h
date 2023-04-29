@@ -7,19 +7,20 @@
 // Forward declarations
 struct GameData;
 
-class MainMenuState : public State
+class EditorState : public State
 {
+// Public interface
 public:
-    MainMenuState(std::shared_ptr<GameData> data);
+    EditorState(std::shared_ptr<GameData> data);
 
     void Init() override;
     void HandleInput(sf::Event event) override;
     void Update(float delta) override;
     void Draw(float delta) const override;
 
+// Private properties
 private:
     std::shared_ptr<GameData> _data;
 
-    Button _playButton;
-    Button _editorButton;
+    Button _backButton;
 };

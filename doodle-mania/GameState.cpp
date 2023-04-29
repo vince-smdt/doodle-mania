@@ -24,11 +24,6 @@ void GameState::Init()
         _tracks[i].setFillColor(sf::Color(100, 100, 100));
     }
 
-    // Initialize background
-    _background.setFillColor(sf::Color::White);
-    _background.setSize(sf::Vector2f(_data->window.getSize().x, _data->window.getSize().y));
-    _background.setPosition(sf::Vector2f(0, 0));
-
     // Initialize additional shapes
     _playerLine.setFillColor(sf::Color(100, 100, 100));
     _playerLine.setSize(sf::Vector2f(TRACKS_DIST_APART * (_tracks.size() - 1), 4));
@@ -50,7 +45,7 @@ void GameState::HandleInput(sf::Event event)
     {
         _data->window.close();
     }
-    if (event.type == sf::Event::KeyPressed)
+    else if (event.type == sf::Event::KeyPressed)
     {
         switch (event.key.code)
         {
@@ -83,7 +78,7 @@ void GameState::Update(float delta)
     _player.UpdateMoveState();
 
     // Handle bullets
-    MoveBullets();
+    MoveBullets(delta);
     DeleteOffscreenBullets();
     SpawnBullets();
 
@@ -97,9 +92,8 @@ void GameState::Update(float delta)
 
 void GameState::Draw(float delta) const
 {
-    _data->window.clear();
+    _data->window.clear(sf::Color::White);
 
-    _data->window.draw(_background);                             // Background
     for (auto& track : _tracks) _data->window.draw(track);       // Tracks
     for (auto& bullet : _bullets) _data->window.draw(bullet);    // Bullets
     _data->window.draw(_playerLine);                             // Other lines and shapes
@@ -108,11 +102,11 @@ void GameState::Draw(float delta) const
     _data->window.display();
 }
 
-void GameState::MoveBullets()
+void GameState::MoveBullets(float delta)
 {
     for (auto& bullet : _bullets)
     {
-        bullet.move(0.0f, bullet.GetSpeed());
+        bullet.move(0.0f, bullet.GetSpeed() * delta * 60);
     }
 }
 

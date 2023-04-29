@@ -28,7 +28,6 @@ private:
 
     std::vector<sf::RectangleShape> _tracks;
     sf::RectangleShape _playerLine;
-    sf::RectangleShape _background;
 
 public:
     GameState(std::shared_ptr<GameData> data);
@@ -38,7 +37,7 @@ public:
     void Update(float delta) override;
     void Draw(float delta) const override;
 
-    void MoveBullets();
+    void MoveBullets(float delta);
     void SpawnBullets();
     bool PlayerCollidesWithBullet() const;
     void DeleteOffscreenBullets();

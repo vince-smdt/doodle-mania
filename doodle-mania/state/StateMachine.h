@@ -17,7 +17,7 @@ private:
     bool _isAdding;
     bool _isReplacing;
 public:
-    void AddState(StateRef newState, bool isReplacing = true);
+    void AddState(StateRef newState, bool isReplacing = false);
     void RemoveState();
     void ProcessStateChanges();
     StateRef& GetActiveState();

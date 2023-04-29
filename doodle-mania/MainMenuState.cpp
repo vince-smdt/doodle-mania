@@ -1,3 +1,4 @@
+#include "EditorState.h"
 #include "Game.h"
 #include "GameState.h"
 #include "MainMenuState.h"
@@ -17,10 +18,16 @@ void MainMenuState::Init()
     _playButton.SetSize(sf::Vector2f(400, 100));
     _playButton.SetText("Play");
 
-    // Initialize background
-    _background.setFillColor(sf::Color::White);
-    _background.setSize(sf::Vector2f(_data->window.getSize().x, _data->window.getSize().y));
-    _background.setPosition(sf::Vector2f(0, 0));
+    // Initialize editor button
+    _editorButton.SetColor(sf::Color::White);
+    _editorButton.SetFont(_data->assets.GetFont("font_raleway"));
+    _editorButton.SetFontColor(sf::Color::Black);
+    _editorButton.SetFontSize(25);
+    _editorButton.SetOutlineColor(sf::Color::Black);
+    _editorButton.SetOutlineThickness(2);
+    _editorButton.SetPosition(sf::Vector2f(_data->window.getSize().x / 2, _data->window.getSize().y / 2 + 100));
+    _editorButton.SetSize(sf::Vector2f(200, 50));
+    _editorButton.SetText("Editor");
 }
 
 void MainMenuState::HandleInput(sf::Event event)
@@ -29,11 +36,15 @@ void MainMenuState::HandleInput(sf::Event event)
     {
         _data->window.close();
     }
-    if (event.type == sf::Event::MouseButtonPressed)
+    else if (event.type == sf::Event::MouseButtonPressed)
     {
         if (_playButton.MouseHovering(_data->window))
         {
             _data->machine.AddState(StateRef(new GameState(_data)));
+        }
+        else if (_editorButton.MouseHovering(_data->window))
+        {
+            _data->machine.AddState(StateRef(new EditorState(_data)));
         }
     }
 }
@@ -42,10 +53,10 @@ void MainMenuState::Update(float delta) {}
 
 void MainMenuState::Draw(float delta) const
 {
-    _data->window.clear();
+    _data->window.clear(sf::Color::White);
 
-    _data->window.draw(_background);
     _playButton.Draw(_data->window);
+    _editorButton.Draw(_data->window);
 
     _data->window.display();
 }
